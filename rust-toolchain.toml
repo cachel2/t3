@@ -1,0 +1,6 @@
+# Pin a recent stable toolchain. Edition 2024 needs rustc >= 1.85; we develop
+# on whatever stable is current and let CI use the same channel.
+[toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy"]
+profile = "default"
