@@ -13,9 +13,7 @@ authors = ["Axel Ibarrondo"]
 license = "GPL"
 repository = "https://github.com/Axel84727/t3"
 
-# Lints applied to every crate. The lexer carries no `unsafe`, so we forbid it
-# outright; everything public must be documented, because the docs are part of
-# the deliverable, not an afterthought.
+# Lints applied to every crate.
 [workspace.lints.rust]
 unsafe_code = "forbid"
 missing_docs = "warn"
@@ -27,8 +25,7 @@ pedantic = { level = "warn", priority = -1 }
 # `t3` is a fine module name even if it shadows the crate; allow it.
 module_name_repetitions = "allow"
 
-# Release builds are the ones we measure "instant" against, so turn the
-# optimizer all the way up and let cross-crate inlining happen.
+# Release
 [profile.release]
 opt-level = 3
 lto = "thin"
