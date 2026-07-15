@@ -1,0 +1,36 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+# Shared metadata. Every crate in the workspace inherits these with
+# `version.workspace = true`, `edition.workspace = true`, and so on, so the
+# whole toolchain moves in lockstep and there is exactly one place to bump.
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+authors = ["Axel Ibarrondo"]
+license = "GPL"
+repository = "https://github.com/Axel84727/t3"
+
+# Lints applied to every crate. The lexer carries no `unsafe`, so we forbid it
+# outright; everything public must be documented, because the docs are part of
+# the deliverable, not an afterthought.
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+unreachable_pub = "warn"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# `t3` is a fine module name even if it shadows the crate; allow it.
+module_name_repetitions = "allow"
+
+# Release builds are the ones we measure "instant" against, so turn the
+# optimizer all the way up and let cross-crate inlining happen.
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
