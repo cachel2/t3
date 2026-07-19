@@ -1,13 +1,23 @@
 //! This is the t3 lexer file
 
 use crate::token::{Span, Token, TokenKind};
-
+/// The [`Lexer`] structure takes the src of the current
+/// position of `pos` is pointing at in the source.
 pub struct Lexer<'a> {
     src: &'a [u8],
     pos: usize,
 }
 
 impl<'a> Lexer<'a> {
+    /// `new()` takes the source and builds an [`Lexer`] type structure.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use t3_lexer::Lexer;
+    /// let mut lx = Lexer::new(b"i32 main() { var i32 x = 10; return x; }");
+    /// ```
+    #[must_use]
     pub fn new(src: &'a [u8]) -> Self {
         Lexer { src, pos: 0 }
     }
@@ -28,7 +38,7 @@ impl<'a> Lexer<'a> {
     /// # Examples
     ///
     /// ```
-    /// use t3_lex::{Lexer, TokenKind};
+    /// use t3_lexer::{Lexer, TokenKind};
     /// let mut lx = Lexer::new(b"x = 10");
     /// assert_eq!(lx.next_token().kind, TokenKind::Ident);
     /// ```
@@ -109,8 +119,8 @@ impl<'a> Lexer<'a> {
         Token {
             kind,
             span: Span {
-                start: start as u32,
-                end: end as u32,
+                start: u32::try_from(start).expect("Error: truncation problem with 32/64 bits"),
+                end: u32::try_from(end).expect("Error: truncation problem with 32/64 bits"),
             },
         }
     }
