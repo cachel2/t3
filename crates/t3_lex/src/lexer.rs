@@ -1,8 +1,7 @@
 //! This is the t3 lexer file
 
 use crate::token::{Span, Token, TokenKind};
-/// The [`Lexer`] structure takes the src of the current
-/// position of `pos` is pointing at in the source.
+/// Holds the source bytes and a \pos` cursor into them.
 pub struct Lexer<'a> {
     src: &'a [u8],
     pos: usize,
