@@ -8,6 +8,10 @@ pub enum Expr {
     Int(Span),
     Ident(Span),
 }
+pub enum Stmt {
+    VarDecl { ty: Span, name: Span, init: Expr },
+    Return { expr: Expr },
+}
 
 impl Parser {
     #[must_use]
