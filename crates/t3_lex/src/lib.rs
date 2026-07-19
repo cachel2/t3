@@ -4,3 +4,6 @@
 pub mod lexer;
 pub mod token;
 //TODO: expose api's from this crate.
+
+pub use lexer::Lexer;
+pub use token::{Span, Token, TokenKind};
