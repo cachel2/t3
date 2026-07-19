@@ -22,7 +22,17 @@ impl Parser {
     fn bump(&mut self) {
         self.pos += 1;
     }
-
+    fn expect(&mut self, kind: TokenKind) {
+        let tok = match self.peek() {
+            Some(e) => e,
+            None => panic!("unexpected end of input"),
+        };
+        if tok.kind == kind {
+            self.bump();
+        } else {
+            panic!("expected {kind:?}, found {:?}", tok.kind);
+        }
+    }
     fn parse_expr(&mut self) -> Expr {
         let tok = match self.peek() {
             Some(e) => e,
