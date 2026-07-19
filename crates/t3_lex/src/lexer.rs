@@ -1,7 +1,7 @@
 //! This is the t3 lexer file
 
 pub struct Lexer<'a> {
-    src: &'a [u8], // una referencia prestada al fuente
+    src: &'a [u8],
     pos: usize,
 }
 
