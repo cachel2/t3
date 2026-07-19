@@ -20,6 +20,24 @@ impl<'a> Lexer<'a> {
         self.pos += 1;
     }
 
+    /// Scans and returns the next token, skipping any whitespace.
+    ///
+    /// One the source is exhausted it returns [`TokenKind::Eof`], and
+    /// keeps returning it on every further call.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use t3_lex::{Lexer, TokenKind};
+    /// let mut lx = Lexer::new(b"x = 10");
+    /// assert_eq!(lx.next_token().kind, TokenKind::Ident);
+    /// ```
+    ///
+    /// # Panics
+    ///
+    /// Currently panics on every byte that isn't whitespace, an identifier
+    /// character, a digit, or one of `(){};=`. This is temporary, will emit
+    /// a diagnostic later.
     pub fn next_token(&mut self) -> Token {
         while let Some(b) = self.peek() {
             if b == b' ' || b == b'\t' || b == b'\n' || b == b'\r' {
