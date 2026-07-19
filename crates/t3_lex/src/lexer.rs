@@ -78,12 +78,15 @@ impl<'a> Lexer<'a> {
             }
 
             Some(b) if b.is_ascii_digit() => {
-                while b.is_ascii_digit() {
-                    self.bump();
+                while let Some(b) = self.peek() {
+                    if b.is_ascii_digit() {
+                        self.bump();
+                    } else {
+                        break;
+                    }
                 }
                 TokenKind::Int
             }
-
             Some(other) => panic!("did not expect that byte {}", other as char),
         };
 
