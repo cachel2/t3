@@ -1,9 +1,6 @@
 //! This is the t3 lexer file
 
-use crate::{
-    TokenKind::Var,
-    token::{Span, Token, TokenKind},
-};
+use crate::token::{Span, Token, TokenKind};
 
 pub struct Lexer<'a> {
     src: &'a [u8],
@@ -108,6 +105,35 @@ mod tests {
     #[test]
     fn lex_milestone() {
         let mut lx = Lexer::new(b"i32 main() { var i32 x = 10; return x; }");
-        assert_eq!(lx.next_token().kind, TokenKind::Ident);
+
+        let mut kinds = Vec::new();
+        loop {
+            let k = lx.next_token().kind;
+            kinds.push(k);
+            if k == TokenKind::Eof {
+                break;
+            }
+        }
+        assert_eq!(
+            kinds,
+            vec![
+                TokenKind::Ident, // i32
+                TokenKind::Ident, // main
+                TokenKind::LParen,
+                TokenKind::RParen,
+                TokenKind::LBrace,
+                TokenKind::Var,
+                TokenKind::Ident,
+                TokenKind::Ident,
+                TokenKind::Eq,
+                TokenKind::Int,
+                TokenKind::Semi,
+                TokenKind::Return,
+                TokenKind::Ident,
+                TokenKind::Semi,
+                TokenKind::RBrace,
+                TokenKind::Eof,
+            ]
+        );
     }
 }
