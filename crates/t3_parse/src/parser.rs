@@ -20,6 +20,13 @@ pub enum Stmt {
     Return { expr: Expr },
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct Func {
+    pub name: Span,
+    pub return_ty: Span,
+    pub body: Vec<Stmt>,
+}
+
 impl Parser {
     #[must_use]
     fn new(tokens: Vec<Token>) -> Self {
@@ -77,12 +84,34 @@ impl Parser {
             other => panic!("expected a statement, found {other:?}"),
         }
     }
+
+    fn parse_func(&mut self) -> Func {
+        let return_ty = self.expect(TokenKind::Ident);
+
+        let name = self.expect(Ident);
+
+        self.expect(TokenKind::LParen);
+        self.expect(TokenKind::RParen);
+
+        self.expect(TokenKind::LBrace);
+        let mut body = Vec::new();
+        while self.current().kind != TokenKind::RBrace {
+            body.push(self.parse_stmt());
+        }
+
+        self.expect(TokenKind::RBrace);
+        Func {
+            return_ty,
+            name,
+            body,
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use t3_lexer::Lexer;
+    use t3_lexer::{Lexer, TokenKind::LParen};
 
     fn lex(src: &[u8]) -> Vec<Token> {
         let mut lx = Lexer::new(src);
@@ -107,6 +136,28 @@ mod tests {
             Stmt::VarDecl {
                 init: Expr::Int(_),
                 ..
+            }
+        ));
+    }
+
+    #[test]
+    fn parse_func() {
+        let mut fun = Parser::new(lex(b"i32 main() { var i32 x = 10; return x; }"));
+        let parsed = fun.parse_func();
+
+        assert_eq!(parsed.body.len(), 2);
+        assert!(matches!(
+            parsed.body[0],
+            Stmt::VarDecl {
+                init: Expr::Int(_),
+                ..
+            }
+        ));
+
+        assert!(matches!(
+            parsed.body[1],
+            Stmt::Return {
+                expr: Expr::Ident(_),
             }
         ));
     }
