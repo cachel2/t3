@@ -9,6 +9,8 @@ repository.workspace = true
 
 [dependencies]
 t3_lexer = { path = "../t3_lex" }
+inkwell = { version = "0.9.0", features = ["llvm22-1"] }
+
 
 [lints]
 workspace = true

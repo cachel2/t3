@@ -1,7 +1,13 @@
+use inkwell::values::PointerValue;
+use std::collections::HashMap;
 use t3_lexer::{
     Span, Token,
     TokenKind::{self, Eq, Ident, Int, Return, Semi, Var},
 };
+
+pub struct Codegen<'src, 'ctx> {
+    vars: HashMap<&'src [u8], PointerValue<'ctx>>,
+}
 
 pub struct Parser {
     tokens: Vec<Token>,
